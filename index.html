@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Looks Busy</title>
+<style>
+:root{--bg:#eceff3;--card:#fff;--ink:#1f2933;--mute:#6b7785;--line:#d5dbe3;--acc:#2b6cb0;--gold:#b7791f;--ok:#2f855a;--bad:#c53030;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14181d;--card:#1d232b;--ink:#e8edf2;--mute:#93a0ae;--line:#303a45;--acc:#6aa6ee;--gold:#ecc062;--ok:#58c58a;--bad:#ef7d6e;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#14181d;--card:#1d232b;--ink:#e8edf2;--mute:#93a0ae;--line:#303a45;--acc:#6aa6ee;--gold:#ecc062;--ok:#58c58a;--bad:#ef7d6e;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.4 "Segoe UI",system-ui,sans-serif}
+main{max-width:620px;margin:0 auto;padding:12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:12px;margin-bottom:12px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.mute{color:var(--mute);font-size:13px}
+button{font:inherit;font-weight:600;cursor:pointer;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:6px;padding:6px 12px}
+button:hover:not(:disabled){border-color:var(--acc)}button:focus-visible{outline:3px solid var(--acc);outline-offset:2px}button:disabled{opacity:.4;cursor:not-allowed}
+.pri{background:var(--acc);border-color:var(--acc);color:#fff}.gold{background:var(--gold);border-color:var(--gold);color:#fff}
+.lang{display:flex}.lang button{padding:3px 9px;font-size:12px;border-radius:0}.lang button:first-child{border-radius:6px 0 0 6px}.lang button:last-child{border-radius:0 6px 6px 0;border-left:0}.lang .on{background:var(--ink);color:var(--card);border-color:var(--ink)}
+.bar{height:8px;border-radius:4px;background:var(--line);overflow:hidden;margin-top:6px}.bar i{display:block;height:100%;background:var(--gold);width:0}
+h1{margin:0;font-size:22px}h3{margin:2px 0 8px;font-size:14px;color:var(--mute);font-weight:600}
+.big{font-size:30px;font-weight:700}
+#inbox{position:relative;height:150px;margin:6px 0 10px;overflow:hidden}
+.mail{position:absolute;left:0;right:0;height:46px;border:1px solid var(--line);border-left:4px solid var(--acc);border-radius:6px;background:var(--card);padding:6px 10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:transform .2s,opacity .2s}
+.mail small{display:block;color:var(--mute)}
+.mail:nth-child(1){top:0}.mail:nth-child(2){top:52px;opacity:.75}.mail:nth-child(3){top:104px;opacity:.5}
+.mail.fly{transform:translateX(60%);opacity:0}
+#reply{width:100%;padding:12px;font-size:17px}
+.up{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 0;border-top:1px solid var(--line)}.up:first-of-type{border-top:0}
+.banner{border-left:4px solid var(--acc)}#boss{border-left-color:var(--bad)}
+.pop{position:fixed;pointer-events:none;font-weight:700;color:var(--acc);animation:fl .8s forwards;z-index:9}
+@keyframes fl{to{transform:translateY(-55px);opacity:0}}
+#toast{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--card);padding:8px 14px;border-radius:20px;z-index:99;font-weight:600;max-width:92%;text-align:center}
+[hidden]{display:none!important}
+@media (prefers-reduced-motion:reduce){.mail,.pop{animation:none;transition:none}}
+</style></head><body><main>
+<section class="card">
+ <div class="row"><h1>Looks Busy™</h1><div class="lang" role="group" aria-label="Language"><button id="l-en">EN</button><button id="l-el">ΕΛ</button></div></div>
+ <div class="mute" data-i="sub"></div>
+ <div class="row" style="margin-top:8px"><span class="big" id="wu">0</span><span class="mute" id="stats"></span></div>
+ <div class="row" style="margin-top:6px"><b id="rank"></b><span class="mute" id="need"></span></div>
+ <div class="bar"><i id="pbar"></i></div>
+ <div class="row" style="margin-top:8px"><button id="promo" class="gold"></button><span class="mute" data-i="promoNote"></span></div>
+</section>
+<section class="card banner" id="boss" hidden><div class="row"><b data-i="boss"></b><button id="bossb" class="pri" data-i="bossBtn"></button></div><div class="bar"><i id="bbar" style="background:var(--bad);width:100%"></i></div></section>
+<section class="card banner" id="daily" hidden><div class="row"><div><b id="dtitle"></b><div class="mute" id="dtext"></div></div><button id="claim" class="pri" data-i="claim"></button></div></section>
+<section class="card"><h3 data-i="inboxH"></h3><div id="inbox"></div><button id="reply" class="pri" data-i="reply"></button></section>
+<section class="card" id="shop"></section>
+<section class="card" style="text-align:center">
+ <div style="font-weight:700" data-i="donT"></div><div class="mute" style="margin:2px 0 8px" data-i="donS"></div>
+ <div class="row" style="justify-content:center"><a id="don" target="_blank" rel="noopener"><button class="pri" data-i="donB"></button></a><button id="share" data-i="share"></button></div>
+</section>
+</main><div id="toast" hidden></div>
+<script>
+function $(i){return document.getElementById(i)}
+const COFFEE_URL="https://buymeacoffee.com/looksbusygame"; // put your own link here
+$("don").href=COFFEE_URL;
+const KEY="looksbusy1";
+const L={en:{sub:"The idle game for the office. Looks like work.",stats:"{0}/s · {1}/click · x{2} bonus",need:"Next promotion: {0} this run",promoNote:"Promotion resets your office for a permanent +50% bonus.",promo:"Get promoted to {0}",
+boss:"👔 The boss is coming!",bossBtn:"Look busy! (Space)",bossOk:"Nice save! +{0}",bossFail:"Caught slacking! −{0}",inboxH:"Inbox",reply:"📧 Reply All",shopH:"Office upgrades",
+dT:"Perfect attendance · streak {0}",dX:"Today’s bonus: {0} work units",claim:"Clock in",cT:"+{0} · streak {1}",away:"While you were at lunch you earned {0}",
+share:"Copy my business card",copied:"Copied! Paste it anywhere.",card:"I’m a {0} at Looks Busy with {1} work units. Can you beat me?",
+donT:"Looks Busy is free and ad-free.",donS:"If it made your day less boring, buy the developer a coffee.",donB:"☕ Buy me a coffee",loc:"en-US",
+titles:["Intern","Associate","Analyst","Manager","Senior Manager","Director","VP","CEO","Chairman"],
+mails:["Re: Re: Fwd: Meeting about the meeting","URGENT: Please see attached (nothing attached)","Quick question (47 recipients)","Per my last email…","Synergy workshop: mandatory fun","Friendly reminder: friendly reminder","Can we circle back on this?","Out of office until 2019"],from:"From: HR, Team, Everyone",
+N:{kb:["Mechanical keyboard","+1 per click"],cof:["Coffee machine ☕","+1/sec"],int:["Intern 🧑‍💼","+6/sec"],mac:["Spreadsheet macro 📊","+35/sec"],met:["Meeting that could be an email 🗓","+200/sec"],ai:["AI assistant 🤖","+1,100/sec"]}},
+el:{sub:"Το idle παιχνίδι για το γραφείο. Μοιάζει με δουλειά.",stats:"{0}/δ · {1}/κλικ · x{2} μπόνους",need:"Επόμενη προαγωγή: {0} σε αυτή τη φάση",promoNote:"Η προαγωγή μηδενίζει το γραφείο και δίνει μόνιμο +50% μπόνους.",promo:"Προαγωγή σε {0}",
+boss:"👔 Έρχεται ο προϊστάμενος!",bossBtn:"Φαίνε απασχολημένος! (Space)",bossOk:"Σώθηκες! +{0}",bossFail:"Σε έπιασαν! −{0}",inboxH:"Εισερχόμενα",reply:"📧 Απάντηση σε όλους",shopH:"Αναβαθμίσεις γραφείου",
+dT:"Τέλεια παρουσία · σερί {0}",dX:"Μπόνους σήμερα: {0} μονάδες εργασίας",claim:"Χτύπα κάρτα",cT:"+{0} · σερί {1}",away:"Όσο έλειπες για φαγητό, κέρδισες {0}",
+share:"Αντίγραψε την κάρτα μου",copied:"Αντιγράφηκε! Κάνε paste όπου θες.",card:"Είμαι {0} στο Looks Busy με {1} μονάδες εργασίας. Μπορείς να με περάσεις;",
+donT:"Το Looks Busy είναι δωρεάν και χωρίς διαφημίσεις.",donS:"Αν σου έκανε τη μέρα λιγότερο βαρετή, κέρνα τον developer έναν καφέ.",donB:"☕ Buy me a coffee",loc:"el-GR",
+titles:["Ασκούμενος","Συνεργάτης","Αναλυτής","Μάνατζερ","Ανώτερος Μάνατζερ","Διευθυντής","Αντιπρόεδρος","CEO","Πρόεδρος ΔΣ"],
+mails:["Re: Re: Fwd: Σύσκεψη για τη σύσκεψη","ΕΠΕΙΓΟΝ: Δες το συνημμένο (δεν έχει)","Μια γρήγορη ερώτηση (47 παραλήπτες)","Σύμφωνα με το προηγούμενο email μου…","Workshop συνέργειας: υποχρεωτική διασκέδαση","Φιλική υπενθύμιση: φιλική υπενθύμιση","Να το ξαναδούμε αυτό;","Εκτός γραφείου μέχρι το 2019"],from:"Από: HR, Ομάδα, Όλοι",
+N:{kb:["Μηχανικό πληκτρολόγιο","+1 ανά κλικ"],cof:["Καφετιέρα ☕","+1/δευτ."],int:["Ασκούμενος 🧑‍💼","+6/δευτ."],mac:["Μακροεντολή στο Excel 📊","+35/δευτ."],met:["Σύσκεψη που θα μπορούσε να είναι email 🗓","+200/δευτ."],ai:["Βοηθός AI 🤖","+1.100/δευτ."]}}};
+let lang="en";try{lang=localStorage.getItem("looksbusy_lang")||"en"}catch(e){}if(!L[lang])lang="en";
+const t=(k,...a)=>L[lang][k].replace(/\{(\d)\}/g,(_,i)=>a[i]);
+const UP=[{id:"kb",b:25,c:1},{id:"cof",b:15,i:1},{id:"int",b:120,i:6},{id:"mac",b:900,i:35},{id:"met",b:7000,i:200},{id:"ai",b:55000,i:1100}];
+const dayKey=d=>d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();
+const today=dayKey(new Date()),yest=dayKey(new Date(Date.now()-864e5));
+let S={wu:0,total:0,run:0,rank:0,lvl:{},streak:0,lastDay:"",last:Date.now()};
+try{Object.assign(S,JSON.parse(localStorage.getItem(KEY)||"{}"))}catch(e){}
+const lv=id=>S.lvl[id]||0,cost=u=>Math.ceil(u.b*1.15**lv(u.id)),mult=()=>1+.5*S.rank;
+const ips=()=>UP.reduce((a,u)=>a+(u.i||0)*lv(u.id),0)*mult(),cpc=()=>(1+lv("kb"))*mult();
+const need=()=>Math.round(5000*4**S.rank),title=r=>L[lang].titles[Math.min(r,8)];
+const fmt=n=>n>=1e6?(n/1e6).toFixed(2)+"M":n>=1e4?(n/1e3).toFixed(1)+"K":Math.floor(n).toLocaleString(L[lang].loc);
+const save=()=>{S.last=Date.now();try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+const gain=n=>{S.wu+=n;S.total+=n;S.run+=n};
+const away=Math.min((Date.now()-S.last)/1000,28800);let awayGain=0;if(away>5&&ips()>0){awayGain=ips()*away;gain(awayGain)}
+let tt;const toast=m=>{const e=$("toast");e.textContent=m;e.hidden=false;clearTimeout(tt);tt=setTimeout(()=>e.hidden=true,2800)};
+const pop=(x,y,m)=>{const p=document.createElement("div");p.className="pop";p.textContent=m;p.style.left=x+"px";p.style.top=y+"px";document.body.appendChild(p);setTimeout(()=>p.remove(),800)};
+
+// Inbox
+const mailHTML=()=>{const m=L[lang].mails;return`<div class="mail"><b>${m[Math.floor(Math.random()*m.length)]}</b><small>${L[lang].from}</small></div>`};
+function fillInbox(){$("inbox").innerHTML=mailHTML()+mailHTML()+mailHTML()}
+$("reply").onclick=e=>{const v=cpc();gain(v);pop(e.clientX||innerWidth/2,e.clientY||300,"+"+fmt(v));
+ const f=$("inbox").firstElementChild;if(f){f.classList.add("fly");setTimeout(()=>{f.remove();$("inbox").insertAdjacentHTML("beforeend",mailHTML())},180)}};
+
+// Shop
+function shop(){$("shop").innerHTML=`<h3>${t("shopH")}</h3>`+UP.map(u=>{const n=L[lang].N[u.id];return`<div class="up"><div><b>${n[0]}</b> <span class="mute">×${lv(u.id)}</span><div class="mute">${n[1]}</div></div><button data-id="${u.id}">${fmt(cost(u))}</button></div>`}).join("")}
+$("shop").onclick=e=>{const b=e.target.closest("button");if(!b)return;const u=UP.find(x=>x.id===b.dataset.id);if(S.wu>=cost(u)){S.wu-=cost(u);S.lvl[u.id]=lv(u.id)+1;shop();save()}};
+
+// Promotion
+$("promo").onclick=()=>{if(S.run<need())return;S.rank++;S.wu=0;S.run=0;S.lvl={};shop();save();toast("🎉 "+title(S.rank))};
+
+// Daily
+const ns=S.lastDay===yest?S.streak+1:1,rw=()=>Math.round(Math.max(100,ips()*500)*(1+Math.min(ns,7)*.25));
+function drawDaily(){if(S.lastDay===today)return;$("daily").hidden=false;$("dtitle").textContent=t("dT",ns);$("dtext").textContent=t("dX",fmt(rw()))}
+$("claim").onclick=()=>{const r=rw();gain(r);S.streak=ns;S.lastDay=today;$("daily").hidden=true;toast(t("cT",fmt(r),ns));save()};
+
+// Boss
+let nextBoss=Date.now()+45000+Math.random()*60000,bossEnd=0;
+function bossResolve(ok){bossEnd=0;$("boss").hidden=true;nextBoss=Date.now()+45000+Math.random()*75000;
+ if(ok){const r=Math.round(Math.max(50,ips()*40+cpc()*20));gain(r);toast(t("bossOk",fmt(r)))}else{const l=Math.floor(S.wu*.05);S.wu-=l;toast(t("bossFail",fmt(l)))}}
+$("bossb").onclick=()=>bossResolve(true);
+addEventListener("keydown",e=>{if(e.code==="Space"&&bossEnd){e.preventDefault();bossResolve(true)}});
+
+// Share
+$("share").onclick=async()=>{const m=t("card",title(S.rank),fmt(S.total))+" "+location.href;try{await navigator.clipboard.writeText(m);toast(t("copied"))}catch(e){toast(m)}};
+
+function render(){
+ $("wu").textContent=fmt(S.wu);$("stats").textContent=t("stats",fmt(ips()),fmt(cpc()),mult().toFixed(1));
+ $("rank").textContent=title(S.rank);$("need").textContent=t("need",fmt(need()));$("pbar").style.width=Math.min(100,S.run/need()*100)+"%";
+ $("promo").textContent=t("promo",title(S.rank+1));$("promo").disabled=S.run<need();
+ document.querySelectorAll("#shop button").forEach(b=>b.disabled=S.wu<cost(UP.find(u=>u.id===b.dataset.id)));
+ if(bossEnd){const left=bossEnd-Date.now();$("bbar").style.width=Math.max(0,left/3500*100)+"%";if(left<=0)bossResolve(false)}
+}
+function applyLang(){document.documentElement.lang=lang;document.querySelectorAll("[data-i]").forEach(el=>el.textContent=L[lang][el.dataset.i]);
+ $("l-en").classList.toggle("on",lang=="en");$("l-el").classList.toggle("on",lang=="el");$("l-en").setAttribute("aria-pressed",lang=="en");$("l-el").setAttribute("aria-pressed",lang=="el");
+ fillInbox();shop();if(!$("daily").hidden)drawDaily();render()}
+const setLang=l=>{lang=l;try{localStorage.setItem("looksbusy_lang",l)}catch(e){}applyLang()};
+$("l-en").onclick=()=>setLang("en");$("l-el").onclick=()=>setLang("el");
+
+let prev=performance.now(),n=0;
+setInterval(()=>{const tm=performance.now();gain(ips()*(tm-prev)/1000);prev=tm;
+ if(!bossEnd&&Date.now()>=nextBoss&&document.visibilityState==="visible"){bossEnd=Date.now()+3500;$("boss").hidden=false}
+ render();if(++n%20==0)save()},250);
+applyLang();drawDaily();if(awayGain>0)toast(t("away",fmt(awayGain)));
+</script></body></html>
