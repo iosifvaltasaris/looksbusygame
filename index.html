@@ -1,60 +1,75 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Looks Busy</title>
+<title>Inbox (1) – Mail</title>
 <style>
-:root{--bg:#eceff3;--card:#fff;--ink:#1f2933;--mute:#6b7785;--line:#d5dbe3;--acc:#2b6cb0;--gold:#b7791f;--ok:#2f855a;--bad:#c53030;
+:root{--bg:#f3f2f1;--card:#fff;--ink:#242424;--mute:#616161;--line:#e1dfdd;--acc:#0f6cbd;--accbg:#e6f0fa;--gold:#b7791f;--ok:#2f855a;--bad:#c53030;--hdr:#0f6cbd;
 box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14181d;--card:#1d232b;--ink:#e8edf2;--mute:#93a0ae;--line:#303a45;--acc:#6aa6ee;--gold:#ecc062;--ok:#58c58a;--bad:#ef7d6e;color-scheme:dark}}
-:root[data-theme="dark"]{--bg:#14181d;--card:#1d232b;--ink:#e8edf2;--mute:#93a0ae;--line:#303a45;--acc:#6aa6ee;--gold:#ecc062;--ok:#58c58a;--bad:#ef7d6e;color-scheme:dark}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1b1a19;--card:#292827;--ink:#f3f2f1;--mute:#a19f9d;--line:#3b3a39;--acc:#6cb8f6;--accbg:#1c3550;--gold:#ecc062;--ok:#58c58a;--bad:#ef7d6e;--hdr:#0b4a82;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#1b1a19;--card:#292827;--ink:#f3f2f1;--mute:#a19f9d;--line:#3b3a39;--acc:#6cb8f6;--accbg:#1c3550;--gold:#ecc062;--ok:#58c58a;--bad:#ef7d6e;--hdr:#0b4a82;color-scheme:dark}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.4 "Segoe UI",system-ui,sans-serif}
-main{max-width:620px;margin:0 auto;padding:12px}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.4 "Segoe UI",system-ui,sans-serif}
+.wrap{max-width:1000px;margin:0 auto;padding:12px}
+.app{background:var(--card);border:1px solid var(--line);border-radius:8px;overflow:hidden;margin-bottom:12px}
 .card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:12px;margin-bottom:12px}
 .row{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
-.mute{color:var(--mute);font-size:13px}
-button{font:inherit;font-weight:600;cursor:pointer;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:6px;padding:6px 12px}
-button:hover:not(:disabled){border-color:var(--acc)}button:focus-visible{outline:3px solid var(--acc);outline-offset:2px}button:disabled{opacity:.4;cursor:not-allowed}
+.mute{color:var(--mute);font-size:12px}
+.topbar{background:var(--hdr);color:#fff;display:flex;align-items:center;gap:12px;padding:8px 14px;flex-wrap:wrap}
+.logo{font-size:16px;font-weight:700;white-space:nowrap}
+.search{flex:1;max-width:380px;border:0;border-radius:4px;padding:6px 10px;background:#ffffff30;color:#fff;font:inherit}.search::placeholder{color:#ffffffcc}
+.sp{flex:1}.me{text-align:right;line-height:1.15;white-space:nowrap}.me b{font-size:15px}
+button{font:inherit;font-weight:600;cursor:pointer;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:4px;padding:6px 12px}
+button:hover:not(:disabled){border-color:var(--acc)}button:focus-visible{outline:3px solid var(--acc);outline-offset:2px}button:disabled{opacity:.45;cursor:not-allowed}
 .pri{background:var(--acc);border-color:var(--acc);color:#fff}.gold{background:var(--gold);border-color:var(--gold);color:#fff}
-.lang{display:flex}.lang button{padding:3px 9px;font-size:12px;border-radius:0}.lang button:first-child{border-radius:6px 0 0 6px}.lang button:last-child{border-radius:0 6px 6px 0;border-left:0}.lang .on{background:var(--ink);color:var(--card);border-color:var(--ink)}
+.lang{display:flex}.lang button{padding:2px 8px;font-size:11px;border-radius:0;background:transparent;color:#fff;border-color:#ffffff66}.lang button:first-child{border-radius:4px 0 0 4px}.lang button:last-child{border-radius:0 4px 4px 0;border-left:0}.lang .on{background:#fff;color:#0b4a82}
+.ribbon{display:flex;gap:6px;align-items:center;padding:8px 12px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.pb{height:3px;background:var(--line)}.pb i{display:block;height:100%;background:var(--gold);width:0}
 .bar{height:8px;border-radius:4px;background:var(--line);overflow:hidden;margin-top:6px}.bar i{display:block;height:100%;background:var(--gold);width:0}
-h1{margin:0;font-size:22px}h3{margin:2px 0 8px;font-size:14px;color:var(--mute);font-weight:600}
-.big{font-size:30px;font-weight:700}
-#inbox{position:relative;height:150px;margin:6px 0 10px;overflow:hidden}
-.mail{position:absolute;left:0;right:0;height:46px;border:1px solid var(--line);border-left:4px solid var(--acc);border-radius:6px;background:var(--card);padding:6px 10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:transform .2s,opacity .2s}
-.mail small{display:block;color:var(--mute)}
-.mail:nth-child(1){top:0}.mail:nth-child(2){top:52px;opacity:.75}.mail:nth-child(3){top:104px;opacity:.5}
-.mail.fly{transform:translateX(60%);opacity:0}
-#reply{width:100%;padding:12px;font-size:17px}
+.banners{padding:0 12px}.banner{border-left:4px solid var(--acc);margin:10px 0 0}#boss{border-left-color:var(--bad)}
+.m3{display:grid;grid-template-columns:170px minmax(240px,1fr) 1.15fr;min-height:430px}
+aside{border-right:1px solid var(--line);padding:8px}
+.fo{display:flex;justify-content:space-between;padding:7px 10px;border-radius:4px}.fo.on{background:var(--accbg);color:var(--acc);font-weight:700}
+.list{border-right:1px solid var(--line);max-height:580px;overflow:hidden}.lh{padding:8px 12px;border-bottom:1px solid var(--line);font-weight:700}
+.mrow{display:flex;gap:10px;padding:9px 12px;border-bottom:1px solid var(--line);border-left:3px solid transparent}.mrow.sel{background:var(--accbg)}.mrow.unread{border-left-color:var(--acc)}.mrow.unread .subj,.mrow.unread b{font-weight:700}.mrow.new{animation:sl .25s}
+@keyframes sl{from{transform:translateY(-12px);opacity:0}}
+.av{width:34px;height:34px;border-radius:50%;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;flex:none}
+.mc{min-width:0;flex:1}.tp{display:flex;justify-content:space-between;gap:6px}.subj,.prev{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:13px}.prev{color:var(--mute)}
+.read{padding:16px}.read h2{margin:0 0 6px;font-size:19px}.meta{display:flex;gap:10px;align-items:center;margin:8px 0}.read p{margin:10px 0}
+.big{width:100%;padding:12px;font-size:16px;margin-top:8px}
+.status{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;padding:6px 12px;background:var(--bg);border-top:1px solid var(--line);font-size:12px;color:var(--mute)}
 .up{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 0;border-top:1px solid var(--line)}.up:first-of-type{border-top:0}
-.banner{border-left:4px solid var(--acc)}#boss{border-left-color:var(--bad)}
+h3{margin:2px 0 8px;font-size:13px;color:var(--mute);font-weight:600}
 .pop{position:fixed;pointer-events:none;font-weight:700;color:var(--acc);animation:fl .8s forwards;z-index:9}
 @keyframes fl{to{transform:translateY(-55px);opacity:0}}
 #toast{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--card);padding:8px 14px;border-radius:20px;z-index:99;font-weight:600;max-width:92%;text-align:center}
+.coffee{background:#ffd34a;border-color:#ffd34a;color:#1a1008;padding:4px 10px}
 [hidden]{display:none!important}
-@media (prefers-reduced-motion:reduce){.mail,.pop{animation:none;transition:none}}
-</style></head><body><main>
-<section class="card">
- <div class="row"><h1>Looks Busy™</h1><div class="lang" role="group" aria-label="Language"><button id="l-en">EN</button><button id="l-el">ΕΛ</button></div></div>
- <div class="mute" data-i="sub"></div>
- <div class="row" style="margin-top:8px"><span class="big" id="wu">0</span><span class="mute" id="stats"></span></div>
- <div class="row" style="margin-top:6px"><b id="rank"></b><span class="mute" id="need"></span></div>
- <div class="bar"><i id="pbar"></i></div>
- <div class="row" style="margin-top:8px"><button id="promo" class="gold"></button><span class="mute" data-i="promoNote"></span></div>
-</section>
-<section class="card banner" id="boss" hidden><div class="row"><b data-i="boss"></b><button id="bossb" class="pri" data-i="bossBtn"></button></div><div class="bar"><i id="bbar" style="background:var(--bad);width:100%"></i></div></section>
-<section class="card banner" id="daily" hidden><div class="row"><div><b id="dtitle"></b><div class="mute" id="dtext"></div></div><button id="claim" class="pri" data-i="claim"></button></div></section>
-<section class="card"><h3 data-i="inboxH"></h3><div id="inbox"></div><button id="reply" class="pri" data-i="reply"></button></section>
+@media(max-width:760px){.m3{grid-template-columns:1fr}aside{display:none}.read{order:-1;border-bottom:1px solid var(--line)}.list{border-right:0}.search{display:none}}
+@media (prefers-reduced-motion:reduce){.mrow.new,.pop{animation:none}}
+</style></head><body><div class="wrap">
+<div class="app">
+ <div class="topbar"><span class="logo">✉ Mail</span><input class="search" id="srch" disabled><span class="sp"></span>
+  <div class="me"><b id="wu">0</b> <span class="mute" style="color:#ffffffcc" data-i="wuL"></span><div id="rank" style="font-size:12px"></div></div>
+  <a id="don3" target="_blank" rel="noopener"><button class="coffee" data-i="donB"></button></a>
+  <div class="lang" role="group" aria-label="Language"><button id="l-en">EN</button><button id="l-el">ΕΛ</button></div></div>
+ <div class="ribbon"><button id="reply" class="pri" data-i="reply"></button><button id="promo" class="gold"></button><button disabled data-i="del"></button><button disabled data-i="arch"></button><span class="sp"></span><span class="mute" data-i="promoNote"></span></div>
+ <div class="pb"><i id="pbar"></i></div>
+ <div class="banners"><div class="card banner" id="boss" hidden><div class="row"><b data-i="boss"></b><button id="bossb" class="pri" data-i="bossBtn"></button></div><div class="bar"><i id="bbar" style="background:var(--bad);width:100%"></i></div></div>
+  <div class="card banner" id="daily" hidden><div class="row"><div><b id="dtitle"></b><div class="mute" id="dtext"></div></div><button id="claim" class="pri" data-i="claim"></button></div></div></div>
+ <div class="m3"><aside id="folders"></aside><section class="list"><div class="lh" data-i="inboxH"></div><div id="inbox"></div></section>
+  <section class="read"><div id="rp"></div><button id="reply2" class="pri big" data-i="reply"></button></section></div>
+ <div class="status"><span id="stats"></span><span><span id="need"></span> · <span data-i="conn"></span> · Looks Busy™</span></div>
+</div>
 <section class="card" id="shop"></section>
 <section class="card" style="text-align:center">
  <div style="font-weight:700" data-i="donT"></div><div class="mute" style="margin:2px 0 8px" data-i="donS"></div>
  <div class="row" style="justify-content:center"><a id="don" target="_blank" rel="noopener"><button class="pri" data-i="donB"></button></a><button id="share" data-i="share"></button></div>
 </section>
-</main><div id="toast" hidden></div>
+</div><div id="toast" hidden></div>
 <script>
 function $(i){return document.getElementById(i)}
 const COFFEE_URL="https://buymeacoffee.com/looksbusygame"; // put your own link here
-$("don").href=COFFEE_URL;
+$("don").href=COFFEE_URL;$("don3").href=COFFEE_URL;
 const KEY="looksbusy1";
 const L={en:{sub:"The idle game for the office. Looks like work.",stats:"{0}/s · {1}/click · x{2} bonus",need:"Next promotion: {0} this run",promoNote:"Promotion resets your office for a permanent +50% bonus.",promo:"Get promoted to {0}",
 boss:"👔 The boss is coming!",bossBtn:"Look busy! (Space)",bossOk:"Nice save! +{0}",bossFail:"Caught slacking! −{0}",inboxH:"Inbox",reply:"📧 Reply All",shopH:"Office upgrades",
@@ -62,7 +77,7 @@ dT:"Perfect attendance · streak {0}",dX:"Today’s bonus: {0} work units",claim
 share:"Copy my business card",copied:"Copied! Paste it anywhere.",card:"I’m a {0} at Looks Busy with {1} work units. Can you beat me?",
 donT:"Looks Busy is free and ad-free.",donS:"If it made your day less boring, buy the developer a coffee.",donB:"☕ Buy me a coffee",loc:"en-US",
 titles:["Intern","Associate","Analyst","Manager","Senior Manager","Director","VP","CEO","Chairman"],
-mails:["Re: Re: Fwd: Meeting about the meeting","URGENT: Please see attached (nothing attached)","Quick question (47 recipients)","Per my last email…","Synergy workshop: mandatory fun","Friendly reminder: friendly reminder","Can we circle back on this?","Out of office until 2019"],from:"From: HR, Team, Everyone",
+mails:["Re: Re: Fwd: Meeting about the meeting","URGENT: Please see attached (nothing attached)","Quick question (47 recipients)","Per my last email…","Synergy workshop: mandatory fun","Friendly reminder: friendly reminder","Can we circle back on this?","Out of office until 2019"],from:"",search:"Search mail",wuL:"work units",del:"Delete",arch:"Archive",conn:"Connected to Exchange",to:"To: you, + 46 others",sig:"Regards, sent from my phone while on mute",fold:["Inbox","Drafts","Sent Items","Deleted Items","Junk Email"],senders:["HR Team","Karen (Accounting)","IT Helpdesk","Your Manager","Steve (47 recipients)","CEO Office","No-Reply","Facilities"],prev:["Please see the attached (nothing attached)…","Just circling back on this…","Reminder: mandatory fun starts at 3pm…","Hope this email finds you well…","Can you action this by EOD?","Looping in a few more people…","As discussed in the meeting about the meeting…","Kindly ignore my previous email…"],body:["Hi all, following up on the follow-up from last week’s sync. Please see below for next steps (there are none). Let me know if you have questions, or if I should schedule a call to discuss scheduling a call.","Quick reminder that the new expense policy requires a form to approve the form. The form is attached to a different email. Thanks for your cooperation.","Team, we’re excited to announce a mandatory voluntary wellness webinar. Attendance will be noted. Snacks are not provided.","Just checking if you had a chance to look at my last email. I’ve looped in everyone I can think of to increase visibility.","Per my last email, which you may not have received because I forgot to press send, please advise.","Great work everyone on the synergy this quarter. Let’s keep leveraging our learnings going forward. More soon."],
 N:{kb:["Mechanical keyboard","+1 per click"],cof:["Coffee machine ☕","+1/sec"],int:["Intern 🧑‍💼","+6/sec"],mac:["Spreadsheet macro 📊","+35/sec"],met:["Meeting that could be an email 🗓","+200/sec"],ai:["AI assistant 🤖","+1,100/sec"]}},
 el:{sub:"Το idle παιχνίδι για το γραφείο. Μοιάζει με δουλειά.",stats:"{0}/δ · {1}/κλικ · x{2} μπόνους",need:"Επόμενη προαγωγή: {0} σε αυτή τη φάση",promoNote:"Η προαγωγή μηδενίζει το γραφείο και δίνει μόνιμο +50% μπόνους.",promo:"Προαγωγή σε {0}",
 boss:"👔 Έρχεται ο προϊστάμενος!",bossBtn:"Φαίνε απασχολημένος! (Space)",bossOk:"Σώθηκες! +{0}",bossFail:"Σε έπιασαν! −{0}",inboxH:"Εισερχόμενα",reply:"📧 Απάντηση σε όλους",shopH:"Αναβαθμίσεις γραφείου",
@@ -70,7 +85,7 @@ dT:"Τέλεια παρουσία · σερί {0}",dX:"Μπόνους σήμερ
 share:"Αντίγραψε την κάρτα μου",copied:"Αντιγράφηκε! Κάνε paste όπου θες.",card:"Είμαι {0} στο Looks Busy με {1} μονάδες εργασίας. Μπορείς να με περάσεις;",
 donT:"Το Looks Busy είναι δωρεάν και χωρίς διαφημίσεις.",donS:"Αν σου έκανε τη μέρα λιγότερο βαρετή, κέρνα τον developer έναν καφέ.",donB:"☕ Buy me a coffee",loc:"el-GR",
 titles:["Ασκούμενος","Συνεργάτης","Αναλυτής","Μάνατζερ","Ανώτερος Μάνατζερ","Διευθυντής","Αντιπρόεδρος","CEO","Πρόεδρος ΔΣ"],
-mails:["Re: Re: Fwd: Σύσκεψη για τη σύσκεψη","ΕΠΕΙΓΟΝ: Δες το συνημμένο (δεν έχει)","Μια γρήγορη ερώτηση (47 παραλήπτες)","Σύμφωνα με το προηγούμενο email μου…","Workshop συνέργειας: υποχρεωτική διασκέδαση","Φιλική υπενθύμιση: φιλική υπενθύμιση","Να το ξαναδούμε αυτό;","Εκτός γραφείου μέχρι το 2019"],from:"Από: HR, Ομάδα, Όλοι",
+mails:["Re: Re: Fwd: Σύσκεψη για τη σύσκεψη","ΕΠΕΙΓΟΝ: Δες το συνημμένο (δεν έχει)","Μια γρήγορη ερώτηση (47 παραλήπτες)","Σύμφωνα με το προηγούμενο email μου…","Workshop συνέργειας: υποχρεωτική διασκέδαση","Φιλική υπενθύμιση: φιλική υπενθύμιση","Να το ξαναδούμε αυτό;","Εκτός γραφείου μέχρι το 2019"],from:"",search:"Αναζήτηση αλληλογραφίας",wuL:"μονάδες εργασίας",del:"Διαγραφή",arch:"Αρχειοθέτηση",conn:"Συνδεδεμένο στον Exchange",to:"Προς: εσένα, + 46 άλλους",sig:"Με εκτίμηση, στάλθηκε από το κινητό μου ενώ ήμουν σε σίγαση",fold:["Εισερχόμενα","Πρόχειρα","Απεσταλμένα","Διαγραμμένα","Ανεπιθύμητα"],senders:["Τμήμα HR","Καρολίνα (Λογιστήριο)","IT Helpdesk","Ο προϊστάμενός σου","Στέλιος (47 παραλήπτες)","Γραφείο CEO","No-Reply","Διαχείριση κτιρίου"],prev:["Δες το συνημμένο (δεν έχει συνημμένο)…","Επανέρχομαι σχετικά με αυτό…","Υπενθύμιση: η υποχρεωτική διασκέδαση ξεκινά στις 3…","Ελπίζω να σε βρίσκει καλά αυτό το email…","Μπορείς να το κλείσεις μέχρι το τέλος της ημέρας;","Βάζω κι άλλους στην κοινοποίηση…","Όπως συζητήσαμε στη σύσκεψη για τη σύσκεψη…","Αγνόησε το προηγούμενο email μου…"],body:["Γεια σε όλους, σε συνέχεια της συνέχειας της περσινής σύσκεψης. Δείτε παρακάτω τα επόμενα βήματα (δεν υπάρχουν). Πείτε μου αν έχετε απορίες ή αν να κλείσω κλήση για να κλείσουμε κλήση.","Υπενθύμιση: η νέα πολιτική εξόδων απαιτεί φόρμα για να εγκριθεί η φόρμα. Η φόρμα είναι συνημμένη σε άλλο email. Ευχαριστώ για τη συνεργασία.","Ομάδα, με χαρά ανακοινώνουμε ένα υποχρεωτικό εθελοντικό webinar ευεξίας. Η παρουσία θα καταγραφεί. Δεν προσφέρονται σνακ.","Απλώς ρωτάω αν είδες το τελευταίο μου email. Βάζω όλους όσους σκέφτηκα για να αυξηθεί η ορατότητα.","Σύμφωνα με το τελευταίο μου email, που ίσως δεν έλαβες γιατί ξέχασα να πατήσω αποστολή, παρακαλώ ενημέρωσέ με.","Μπράβο σε όλους για τη συνέργεια αυτό το τρίμηνο. Συνεχίζουμε να αξιοποιούμε όσα μάθαμε. Σύντομα νέα."],
 N:{kb:["Μηχανικό πληκτρολόγιο","+1 ανά κλικ"],cof:["Καφετιέρα ☕","+1/δευτ."],int:["Ασκούμενος 🧑‍💼","+6/δευτ."],mac:["Μακροεντολή στο Excel 📊","+35/δευτ."],met:["Σύσκεψη που θα μπορούσε να είναι email 🗓","+200/δευτ."],ai:["Βοηθός AI 🤖","+1.100/δευτ."]}}};
 let lang="en";try{lang=localStorage.getItem("looksbusy_lang")||"en"}catch(e){}if(!L[lang])lang="en";
 const t=(k,...a)=>L[lang][k].replace(/\{(\d)\}/g,(_,i)=>a[i]);
@@ -90,10 +105,16 @@ let tt;const toast=m=>{const e=$("toast");e.textContent=m;e.hidden=false;clearTi
 const pop=(x,y,m)=>{const p=document.createElement("div");p.className="pop";p.textContent=m;p.style.left=x+"px";p.style.top=y+"px";document.body.appendChild(p);setTimeout(()=>p.remove(),800)};
 
 // Inbox
-const mailHTML=()=>{const m=L[lang].mails;return`<div class="mail"><b>${m[Math.floor(Math.random()*m.length)]}</b><small>${L[lang].from}</small></div>`};
-function fillInbox(){$("inbox").innerHTML=mailHTML()+mailHTML()+mailHTML()}
-$("reply").onclick=e=>{const v=cpc();gain(v);pop(e.clientX||innerWidth/2,e.clientY||300,"+"+fmt(v));
- const f=$("inbox").firstElementChild;if(f){f.classList.add("fly");setTimeout(()=>{f.remove();$("inbox").insertAdjacentHTML("beforeend",mailHTML())},180)}};
+const rnd=n=>Math.floor(Math.random()*n),pad=n=>(n<10?"0":"")+n,COL=["#0f6cbd","#c239b3","#107c10","#d83b01","#8764b8","#038387","#986f0b"];
+const mk=r=>({s:rnd(8),j:rnd(8),p:rnd(8),b:rnd(6),tm:(8+rnd(10))+":"+pad(rnd(60)),read:!!r,col:rnd(7)});
+let MAILS=Array.from({length:8},(_,i)=>mk(i>0));
+function drawMail(){const D=L[lang],m0=MAILS[0],n0=D.senders[m0.s];
+ $("inbox").innerHTML=MAILS.map((m,i)=>{const nm=D.senders[m.s];return`<div class="mrow${i?"":" sel"}${m.read?"":" unread"}"><span class="av" style="background:${COL[m.col]}">${nm[0]}</span><div class="mc"><div class="tp"><b>${nm}</b><span class="mute">${m.tm}</span></div><div class="subj">${m.read?"↩ ":""}${D.mails[m.j]}</div><div class="prev">${D.prev[m.p]}</div></div></div>`}).join("");
+ $("rp").innerHTML=`<h2>${D.mails[m0.j]}</h2><div class="meta"><span class="av" style="background:${COL[m0.col]}">${n0[0]}</span><div><b>${n0}</b><div class="mute">${D.to}</div></div></div><p>${D.body[m0.b]}</p><p class="mute">${D.sig}</p>`;
+ $("folders").innerHTML=D.fold.map((f,i)=>`<div class="fo${i?"":" on"}"><span>${f}</span>${i?"":"<b>99+</b>"}</div>`).join("");$("srch").placeholder="🔍 "+D.search}
+function fillInbox(){drawMail()}
+function doReply(e){const v=cpc();gain(v);pop(e.clientX||innerWidth/2,e.clientY||300,"+"+fmt(v));MAILS[0].read=true;MAILS.unshift(mk(false));MAILS.length=Math.min(MAILS.length,8);drawMail();$("inbox").firstElementChild.classList.add("new")}
+$("reply").onclick=doReply;$("reply2").onclick=doReply;
 
 // Shop
 function shop(){$("shop").innerHTML=`<h3>${t("shopH")}</h3>`+UP.map(u=>{const n=L[lang].N[u.id];return`<div class="up"><div><b>${n[0]}</b> <span class="mute">×${lv(u.id)}</span><div class="mute">${n[1]}</div></div><button data-id="${u.id}">${fmt(cost(u))}</button></div>`}).join("")}
